@@ -8,27 +8,27 @@ try {
 Clear-Host
 function Show-KRAKEH-Header {
     $headerArt = @"
-       NO!                       MNO!
-     MNO!!                        MNNOO!
-   MMNO!                           MNNOO!!
- MNOONNOO!   MMMMMMMMMMPPPOII!   MNNO!!!!
- !O! NNO! MMMMMMMMMMMMMPPPOOOII!! NO!
-       ! MMMMMMMMMMMMMPPPPOOOOIII! !
-        MMMMMMMMMMMMPPPPPOOOOOOII!!
-        MMMMMOOOOOOPPPPPPPPOOOOMII!
-        MMMMM..    OPPMMP    .,OMI!
-        MMMM::   o.,OPMP,.o   ::I!!
-          NNM:::.,,OOPM!P,.::::!!
-         MMNNNNNOOOOPMO!!IIPPO!!O!
-         MMMMMNNNNOO:!!:!!IPPPPOO!
-          MMMMMNNOOMMNNIIIPPPOO!!
-             MMMONNMMNNNIIIOO!
-           MN MOMMMNNNIIIIIO! OO
-          MNO! IiiiiiiiiiiiI OOOO
-     NNN.MNO!   O!!!!!!!!!O   OONO NO!
-    MNNNNNO!    OOOOOOOOOOO    MMNNON!
-      MNNNNO!    PPPPPPPPP    MMNON!
-         OO!                   ON!
+         ._                __.
+        / \"-.          ,-",'/ 
+       (   \ ,"--.__.--".,' /  
+       =---Y(_i.-'  |-.i_)---=
+      f ,  "..'/\\v/|/|/\  , l
+      l//  ,'|/   V / /||  \\j
+       "--; / db     db|/---"
+          | \ YY   , YY//
+          '.\>_   (_),"' __
+        .-"    "-.-." I,"  `.
+        \.-""-. ( , ) ( \   |
+        (     l  `"'  -'-._j 
+ __,---_ '._." .  .    \
+(__.--_-'.  ,  :  '  \  '-.
+    ,' .'  /   |   \  \  \ "-
+     "--.._____t____.--'-""'
+            /  /  `. ".
+           / ":     \' '.
+         .'  (       \   : 
+         |    l      j    "-.
+         l_;_;I      l____;_I
 "@ -split "`n"
     foreach ($line in $headerArt) {
         Write-Host $line -ForegroundColor Red
